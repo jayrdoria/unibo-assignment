@@ -14,10 +14,11 @@ import WebDevelopment from "./components/WebDevelopment";
 import MobileDevelopment from "./components/MobileDevelopment";
 import EmailUs from "./components/EmailUs";
 import CallUs from "./components/CallUs";
+import FormComponent from "./components/FormComponent";
 
 function App() {
   return (
-    <Router basename="/uniboAssignment">
+    <Router>
       <div className="d-flex">
         <SideNavbar />
         <Routes>
@@ -33,6 +34,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/contact/email" element={<EmailUs />} />
           <Route path="/contact/phone" element={<CallUs />} />
+          <Route path="/form" element={<FormComponent />} />
         </Routes>
       </div>
     </Router>

@@ -79,6 +79,11 @@ function SideNavbar() {
         { name: "Call Us", path: "/contact/phone" },
       ],
     },
+    {
+      name: "Form",
+      path: "/form",
+      items: [],
+    },
   ];
 
   return (
