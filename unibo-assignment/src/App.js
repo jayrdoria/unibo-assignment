@@ -17,7 +17,7 @@ import CallUs from "./components/CallUs";
 
 function App() {
   return (
-    <Router>
+    <Router basename="/uniboAssignment">
       <div className="d-flex">
         <SideNavbar />
         <Routes>
