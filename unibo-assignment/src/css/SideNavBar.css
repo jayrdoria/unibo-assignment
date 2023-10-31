@@ -1,0 +1,82 @@
+/* src/components/SideNavBar.css */
+
+.sidebar-container {
+  display: flex;
+  height: 100vh;
+}
+
+.handle {
+  background-color: transparent;
+  width: 10px;
+  height: 100%;
+  cursor: ew-resize;
+  position: absolute; /* Changed to absolute */
+  top: 0;
+  right: 0; /* Positioned at the rightmost edge */
+}
+
+.handle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 3px;
+  height: 100%;
+  background-color: #232529;
+  transition: background-color 0.3s;
+}
+
+.handle:hover::before {
+  background-color: #1f67de;
+}
+
+.sidebar-content {
+  background-color: #1e2024;
+  height: 100%;
+  position: relative; /* Added to position the handle */
+}
+
+.nav-link.text-white:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+
+.expanded-item {
+  padding-left: 40px; /* Adjust this value based on your preference */
+}
+
+.arrow-button {
+  background: none;
+  width: 30px;
+  border: 1px solid transparent; /* Add a transparent border */
+  padding: 0;
+  margin-left: 10px;
+  margin-right: -12px;
+  cursor: pointer;
+  transition: border-color 0.3s; /* Smooth transition for hover effect */
+  text-decoration: none; /* Remove underline */
+}
+
+.arrow-button:hover {
+  border-color: white; /* Color when hovered */
+  text-decoration: none; /* Ensure no underline on hover */
+}
+
+.arrow-button:focus {
+  outline: none;
+  text-decoration: none; /* Ensure no underline on focus */
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.nav-container:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-container .nav-link:hover {
+  background-color: transparent; /* Removes the background color on hover */
+}
