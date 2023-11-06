@@ -21,7 +21,7 @@ const FormComponent = () => {
     formData.append("file", blob, `${title}.json`);
 
     try {
-      const response = await fetch("http://localhost:3001/upload", {
+      const response = await fetch("https://lagueslo.com:3001/upload", {
         method: "POST",
         body: formData,
       });

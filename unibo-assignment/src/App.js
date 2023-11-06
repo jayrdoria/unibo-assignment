@@ -18,7 +18,7 @@ import FormComponent from "./components/FormComponent";
 
 function App() {
   return (
-    <Router>
+    <Router basename="/uniboAssignment">
       <div className="d-flex">
         <SideNavbar />
         <Routes>
