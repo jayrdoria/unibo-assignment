@@ -15,6 +15,8 @@ import MobileDevelopment from "./components/MobileDevelopment";
 import EmailUs from "./components/EmailUs";
 import CallUs from "./components/CallUs";
 import FormComponent from "./components/FormComponent";
+import FormList from "./components/FormList";
+import FormEdit from "./components/FormEdit";
 
 function App() {
   return (
@@ -35,6 +37,8 @@ function App() {
           <Route path="/contact/email" element={<EmailUs />} />
           <Route path="/contact/phone" element={<CallUs />} />
           <Route path="/form" element={<FormComponent />} />
+          <Route path="/formList" element={<FormList />} />
+          <Route path="/formEdit/:fileName" element={<FormEdit />} />
         </Routes>
       </div>
     </Router>

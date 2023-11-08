@@ -84,6 +84,11 @@ function SideNavbar() {
       path: "/form",
       items: [],
     },
+    {
+      name: "Form List",
+      path: "/formlist",
+      items: [],
+    },
   ];
 
   return (

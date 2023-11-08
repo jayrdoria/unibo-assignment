@@ -1,46 +1,83 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useParams, useNavigate } from "react-router-dom";
 
-const FormComponent = () => {
+const FormEdit = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
   const [dateToday, setDateToday] = useState(new Date());
+  const { fileName } = useParams(); // Retrieve fileName from URL
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://lagueslo.com/uniboAssignment/json/${fileName}`
+        );
+
+        if (!response.ok) {
+          // If the HTTP status code is not in the 200-299 range
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new TypeError("Oops, we haven't got JSON!");
+        }
+
+        const data = await response.json();
+        setTitle(data.title);
+        setContent(data.content);
+        setAuthor(data.author);
+        setDateToday(new Date(data.dateToday));
+      } catch (error) {
+        console.error("Error fetching file data:", error);
+      }
+    };
+
+    fetchData();
+  }, [fileName]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    const formData = new FormData();
-    const blob = new Blob(
-      [JSON.stringify({ title, content, author, dateToday }, null, 2)],
-      { type: "application/json" }
-    );
-    formData.append("file", blob, `${title}.json`);
-
+    console.log("Update button clicked"); // Check if the function is called
     try {
-      const response = await fetch("https://lagueslo.com:3001/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await response.json();
-      window.open(data.url, "_blank"); // Open the URL in a new tab
-    } catch (error) {
-      console.error("Error uploading file:", error);
-    }
+      const response = await fetch(
+        `https://lagueslo.com:3001/update/${fileName}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title,
+            content,
+            author,
+            dateToday: dateToday.toISOString(),
+          }),
+        }
+      );
 
-    // Reset form data
-    setTitle("");
-    setContent("");
-    setAuthor("");
-    setDateToday(new Date());
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Updated successfully:", data);
+      navigate(`/formList`);
+    } catch (error) {
+      console.error("Error updating file data:", error);
+    }
   };
 
   return (
     <div className="container mt-4">
-      <h1 className="text-center mb-4">Create JSON File</h1>
+      <h1 className="text-center mb-4">Edit JSON</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-3 row">
           <label htmlFor="titleInput" className="col-sm-2 col-form-label">
@@ -97,11 +134,11 @@ const FormComponent = () => {
         </div>
 
         <button type="submit" className="btn btn-primary">
-          Submit
+          Update
         </button>
       </form>
     </div>
   );
 };
 
-export default FormComponent;
+export default FormEdit;
