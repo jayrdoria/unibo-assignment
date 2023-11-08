@@ -3,6 +3,8 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FormComponent = () => {
   const [title, setTitle] = useState("");
@@ -26,8 +28,10 @@ const FormComponent = () => {
         body: formData,
       });
       const data = await response.json();
-      window.open(data.url, "_blank"); // Open the URL in a new tab
+      toast.success("JSON file created successfully!"); // Show success toast
+      //window.open(data.url, "_blank"); // Open the URL in a new tab
     } catch (error) {
+      toast.error("Error creating file."); // Show error toast
       console.error("Error uploading file:", error);
     }
 
@@ -40,6 +44,7 @@ const FormComponent = () => {
 
   return (
     <div className="container mt-4">
+      <ToastContainer />
       <h1 className="text-center mb-4">Create JSON File</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-3 row">
