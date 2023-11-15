@@ -110,8 +110,14 @@ app.get("/list-json", async (req, res) => {
       .map((file) => {
         const filePath = path.join(uploadPath, file);
         const fileStats = fs.statSync(filePath);
+
+        // Read the JSON file to extract the author information
+        const fileContent = JSON.parse(fs.readFileSync(filePath));
+        const author = fileContent.author; // Assuming 'author' is a key in your JSON structure
+
         return {
           name: file,
+          author: author, // Include the author information
           url: `https://lagueslo.com/uniboAssignment/json/${file}`,
           lastModified: fileStats.mtime,
         };

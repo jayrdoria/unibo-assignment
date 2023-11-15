@@ -93,7 +93,7 @@ function SideNavbar() {
 
   return (
     <div className="sidebar-container">
-      <div className="sidebar-content" style={{ width: width }}>
+      <div className="sidebar-content" style={{ width: `${width}px` }}>
         <h3 className="text-white">My App</h3>
         <ul className="nav flex-column mt-4">
           {sidebarItems.map((item) => (

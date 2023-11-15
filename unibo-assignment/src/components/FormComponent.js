@@ -3,7 +3,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const FormComponent = () => {
@@ -44,7 +44,6 @@ const FormComponent = () => {
 
   return (
     <div className="container mt-4">
-      <ToastContainer />
       <h1 className="text-center mb-4">Create JSON File</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-3 row">

@@ -16,12 +16,13 @@ import EmailUs from "./components/EmailUs";
 import CallUs from "./components/CallUs";
 import FormComponent from "./components/FormComponent";
 import FormList from "./components/FormList";
-import FormEdit from "./components/FormEdit";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
     <Router basename="/uniboAssignment">
       <div className="d-flex">
+        <ToastContainer />
         <SideNavbar />
         <Routes>
           <Route path="/" element={<MainScreen />} />
@@ -38,7 +39,6 @@ function App() {
           <Route path="/contact/phone" element={<CallUs />} />
           <Route path="/form" element={<FormComponent />} />
           <Route path="/formList" element={<FormList />} />
-          <Route path="/formEdit/:fileName" element={<FormEdit />} />
         </Routes>
       </div>
     </Router>

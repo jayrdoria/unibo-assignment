@@ -1,3 +1,65 @@
 .btn-margin-right {
   margin-right: 8px;
 }
+
+.file-explorer {
+  cursor: pointer;
+}
+.file-container {
+  border: 1px solid #ddd;
+  padding: 8px; /* Reduced padding */
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease-in-out;
+  display: flex; /* Use flexbox for internal alignment */
+  flex-direction: column; /* Stack elements vertically */
+  justify-content: center; /* Center elements vertically */
+  align-items: center; /* Center elements horizontally */
+}
+
+.file-container:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); /* Larger and darker shadow */
+  transform: scale(1.05); /* Slightly scale up the container */
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out; /* Smooth transition for shadow and transform */
+}
+
+.file-container img {
+  max-height: 100px; /* Adjusted max height */
+}
+
+.file-container h5,
+.file-container p {
+  margin: 0;
+  padding-bottom: 3px;
+}
+
+/* Text sizing */
+.file-container h5 {
+  font-size: 0.9em; /* Smaller font size for file name */
+  text-align: center; /* Ensure text is centered */
+  margin-top: 4px; /* Add some space above the file name */
+}
+
+.file-container p {
+  font-size: 0.8em; /* Smaller font size for details */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .file-container {
+    padding: 6px;
+  }
+  .file-container img {
+    max-height: 80px;
+  }
+}
+
+@media (max-width: 576px) {
+  .file-container {
+    padding: 4px;
+  }
+  .file-container img {
+    max-height: 60px;
+  }
+}

@@ -5,6 +5,12 @@
   height: 100vh;
 }
 
+.sidebar-content {
+  background-color: #1e2024;
+  height: 100%;
+  position: relative; /* Added to position the handle */
+}
+
 .handle {
   background-color: transparent;
   width: 10px;
@@ -28,12 +34,6 @@
 
 .handle:hover::before {
   background-color: #1f67de;
-}
-
-.sidebar-content {
-  background-color: #1e2024;
-  height: 100%;
-  position: relative; /* Added to position the handle */
 }
 
 .nav-link.text-white:hover {
