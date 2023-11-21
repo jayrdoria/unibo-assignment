@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../css/SideNavBar.css";
 
 function SideNavbar() {
-  const [width, setWidth] = useState(200);
+  const [width, setWidth] = useState(230);
   const [expandedItem, setExpandedItem] = useState([]);
 
   const navigate = useNavigate();
@@ -12,9 +12,12 @@ function SideNavbar() {
   const handleMouseDown = (event) => {
     const startX = event.pageX;
     const startWidth = width;
+    const minWidth = 200; // Minimum width
+    const maxWidth = 400; // Maximum width
 
     const onMouseMove = (moveEvent) => {
-      const newWidth = startWidth + (moveEvent.pageX - startX);
+      let newWidth = startWidth + (moveEvent.pageX - startX);
+      newWidth = Math.max(minWidth, Math.min(newWidth, maxWidth)); // Enforce min and max
       setWidth(newWidth);
     };
 
@@ -94,10 +97,12 @@ function SideNavbar() {
   return (
     <div className="sidebar-container">
       <div className="sidebar-content" style={{ width: `${width}px` }}>
-        <h3 className="text-white">My App</h3>
+        <a href="/uniboAssignment" className="header-link">
+          <h3 className="text-white">My App</h3>
+        </a>
         <ul className="nav flex-column mt-4">
           {sidebarItems.map((item) => (
-            <li className="nav-item mb-2" key={item.name}>
+            <li className="nav-item" key={item.name}>
               <div
                 className="nav-container"
                 onClick={() => handleNavigation(item.path)}
@@ -114,12 +119,9 @@ function SideNavbar() {
                 <span className="nav-link text-white">{item.name}</span>
               </div>
               {expandedItem.includes(item.name) && (
-                <ul className="nav flex-column pl-3">
+                <ul className="nav flex-column">
                   {item.items.map((subItem) => (
-                    <li
-                      className="nav-item mb-2 expanded-item"
-                      key={subItem.name}
-                    >
+                    <li className="nav-item expanded-item" key={subItem.name}>
                       <a
                         className="nav-link text-white"
                         onClick={() => handleNavigation(subItem.path)}

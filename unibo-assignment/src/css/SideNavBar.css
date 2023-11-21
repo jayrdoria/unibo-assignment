@@ -1,14 +1,42 @@
 /* src/components/SideNavBar.css */
 
+/* Preserving the original color scheme */
 .sidebar-container {
   display: flex;
   height: 100vh;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Adding subtle shadow for depth */
 }
 
 .sidebar-content {
   background-color: #1e2024;
   height: 100%;
-  position: relative; /* Added to position the handle */
+  position: relative;
+  overflow-y: auto;
+  min-width: 200px; /* Minimum width */
+  max-width: 400px; /* Maximum width */
+}
+
+/* Custom scrollbar styles for a modern look */
+.sidebar-content::-webkit-scrollbar {
+  width: 10px; /* Adjust the width as needed */
+}
+
+.sidebar-content::-webkit-scrollbar-track {
+  background: #2e3036; /* Track color */
+}
+
+.sidebar-content::-webkit-scrollbar-thumb {
+  background: #555; /* Thumb color */
+  border-radius: 5px; /* Rounded corners for the scrollbar thumb */
+}
+
+.sidebar-content::-webkit-scrollbar-thumb:hover {
+  background: #6b6e74; /* Thumb color on hover */
+}
+
+.header-link {
+  text-decoration: none; /* Removes underline from the link */
+  color: inherit; /* Ensures the color matches the enclosed text */
 }
 
 .handle {
@@ -16,9 +44,9 @@
   width: 10px;
   height: 100%;
   cursor: ew-resize;
-  position: absolute; /* Changed to absolute */
+  position: absolute;
   top: 0;
-  right: 0; /* Positioned at the rightmost edge */
+  right: 0;
 }
 
 .handle::before {
@@ -29,48 +57,58 @@
   width: 3px;
   height: 100%;
   background-color: #232529;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, width 0.3s ease; /* Enhanced transition */
 }
 
 .handle:hover::before {
   background-color: #1f67de;
+  width: 6px; /* Slightly wider on hover for better visibility */
 }
 
-.nav-link.text-white:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+.nav-link.text-white {
+  padding: 10px 0 10px 15px;
+  margin: 0;
+}
+
+.nav-link.text-white,
+.expanded-item {
+  display: block;
+  transition: background-color 0.05s ease;
   cursor: pointer;
 }
 
 .expanded-item {
-  padding-left: 40px; /* Adjust this value based on your preference */
+  display: block;
+  padding-left: 40px;
+}
+
+.nav-link.text-white:hover,
+.expanded-item:hover {
+  background-color: #35363a;
 }
 
 .arrow-button {
   background: none;
   width: 30px;
-  border: 1px solid transparent; /* Add a transparent border */
+  border: none; /* Removing the border */
   padding: 0;
   margin-left: 10px;
   margin-right: -12px;
   cursor: pointer;
-  transition: border-color 0.3s; /* Smooth transition for hover effect */
-  text-decoration: none; /* Remove underline */
+  transition: transform 0.3s ease; /* Smooth rotation effect */
+  color: white; /* Ensuring the arrow is white */
+  text-decoration: none;
 }
 
 .arrow-button:hover {
-  border-color: white; /* Color when hovered */
-  text-decoration: none; /* Ensure no underline on hover */
-}
-
-.arrow-button:focus {
-  outline: none;
-  text-decoration: none; /* Ensure no underline on focus */
+  transform: scale(1.1); /* Slightly enlarging the arrow on hover */
 }
 
 .nav-container {
   display: flex;
   align-items: center;
   cursor: pointer;
+  transition: background-color 0.3s ease-in-out; /* Smooth background transition */
 }
 
 .nav-container:hover {
@@ -78,5 +116,12 @@
 }
 
 .nav-container .nav-link:hover {
-  background-color: transparent; /* Removes the background color on hover */
+  background-color: transparent;
+}
+
+/* Adding a modern touch to the typography */
+h3 {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+  padding: 10px; /* Adding some padding */
+  border-bottom: 1px solid #333; /* Underline effect */
 }
