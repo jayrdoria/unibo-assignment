@@ -87,6 +87,29 @@ const FormEditModal = ({ show, handleClose, fileName, updateFileList }) => {
     saveAs(blob, `${title.replace(/ /g, "_")}.json`);
   };
 
+  const handleDelete = async () => {
+    if (window.confirm("Are you sure you want to delete this file?")) {
+      try {
+        const response = await fetch(
+          `https://lagueslo.com:3001/delete/${fileName}`,
+          {
+            method: "DELETE",
+          }
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        await response.json();
+        toast.success("JSON file deleted successfully!");
+        updateFileList();
+        handleClose();
+      } catch (error) {
+        toast.error("Error deleting file.");
+        console.error("Error deleting file:", error);
+      }
+    }
+  };
+
   return (
     <Modal show={show} onHide={handleClose} size="lg">
       <Modal.Header closeButton>
@@ -142,16 +165,21 @@ const FormEditModal = ({ show, handleClose, fileName, updateFileList }) => {
           </div>
         </form>
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-          Close
+      <Modal.Footer className="d-flex justify-content-between">
+        <Button variant="danger" onClick={handleDelete}>
+          Delete
         </Button>
-        <Button variant="success" onClick={handleDownload}>
-          Download
-        </Button>
-        <Button variant="primary" onClick={handleSubmit}>
-          Update
-        </Button>
+        <div>
+          <Button variant="secondary" onClick={handleClose} className="me-2">
+            Close
+          </Button>
+          <Button variant="success" onClick={handleDownload} className="me-2">
+            Download
+          </Button>
+          <Button variant="primary" onClick={handleSubmit}>
+            Update
+          </Button>
+        </div>
       </Modal.Footer>
     </Modal>
   );

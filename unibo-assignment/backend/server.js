@@ -218,6 +218,27 @@ app.put("/update/:fileName", (req, res) => {
   });
 });
 
+app.delete("/delete/:fileName", async (req, res) => {
+  const { fileName } = req.params;
+  const filePath = `/home/admin/web/lagueslo.com/public_html/uniboAssignment/json/${fileName}`;
+
+  try {
+    // Delete file from filesystem
+    fs.unlinkSync(filePath);
+
+    // Delete record from database
+    const sql = "DELETE FROM uniboForm WHERE json_url = ?";
+    await connection.execute(sql, [
+      `https://lagueslo.com/uniboAssignment/json/${fileName}`,
+    ]);
+
+    res.json({ message: "File and database record deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting file:", error);
+    res.status(500).send("Error deleting file");
+  }
+});
+
 // Serve uploaded files statically
 app.use(
   "/uniboAssignment/json",

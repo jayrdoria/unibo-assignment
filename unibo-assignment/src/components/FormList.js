@@ -77,9 +77,9 @@ function FormList() {
 
   return (
     <div className="container mt-5">
-      <h1 className="text-center mb-4">JSON File Explorer</h1>
+      <h1 className="text-center mb-3">JSON File Explorer</h1>
       {/* Upload Button and Hidden File Input */}
-      <div className="text-center mb-4">
+      <div className="text-center mb-2">
         <input
           type="file"
           id="fileUpload"
