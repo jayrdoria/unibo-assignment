@@ -2,64 +2,75 @@
   margin-right: 8px;
 }
 
-.file-explorer {
+.file-explorer,
+.folder-container {
   cursor: pointer;
 }
-.file-container {
+
+.file-container,
+.folder-container {
   border: 1px solid #ddd;
-  padding: 8px; /* Reduced padding */
+  padding: 8px;
   border-radius: 8px;
   background: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease-in-out;
-  display: flex; /* Use flexbox for internal alignment */
-  flex-direction: column; /* Stack elements vertically */
-  justify-content: center; /* Center elements vertically */
-  align-items: center; /* Center elements horizontally */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
-.file-container:hover {
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); /* Larger and darker shadow */
-  transform: scale(1.05); /* Slightly scale up the container */
-  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out; /* Smooth transition for shadow and transform */
+.file-container:hover,
+.folder-container:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
-.file-container img {
-  max-height: 100px; /* Adjusted max height */
+.file-container img,
+.folder-container img {
+  max-height: 100px;
 }
 
 .file-container h5,
-.file-container p {
+.file-container p,
+.folder-container h5 {
   margin: 0;
   padding-bottom: 3px;
 }
 
-/* Text sizing */
-.file-container h5 {
-  font-size: 0.9em; /* Smaller font size for file name */
-  text-align: center; /* Ensure text is centered */
-  margin-top: 4px; /* Add some space above the file name */
+.file-container h5,
+.folder-container h5 {
+  font-size: 0.9em;
+  text-align: center;
+  margin-top: 4px;
 }
 
 .file-container p {
-  font-size: 0.8em; /* Smaller font size for details */
+  font-size: 0.8em;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .file-container {
+  .file-container,
+  .folder-container {
     padding: 6px;
   }
-  .file-container img {
+  .file-container img,
+  .folder-container img {
     max-height: 80px;
   }
 }
 
 @media (max-width: 576px) {
-  .file-container {
+  .file-container,
+  .folder-container {
     padding: 4px;
   }
-  .file-container img {
+  .file-container img,
+  .folder-container img {
     max-height: 60px;
   }
 }

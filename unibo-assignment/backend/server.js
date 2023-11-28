@@ -1,6 +1,6 @@
 const express = require("express");
 const mysql = require("mysql2");
-const multer = require("multer");
+const fileUpload = require("express-fileupload");
 const cors = require("cors");
 const https = require("https");
 const fs = require("fs");
@@ -51,79 +51,102 @@ const dbConfig = {
 
 const connection = mysql.createConnection(dbConfig);
 
-// Configure multer storage to use the desired directory
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    // Check if the directory exists, and create it if it doesn't
-    const uploadPath =
-      "/home/admin/web/lagueslo.com/public_html/uniboAssignment/json";
-    fs.mkdirSync(uploadPath, { recursive: true });
-    cb(null, uploadPath);
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
-});
+// Default options for express-fileupload
+app.use(fileUpload());
 
-const upload = multer({ storage: storage });
-
-app.post("/upload", upload.single("file"), (req, res) => {
-  if (!req.file) {
+app.post("/upload", (req, res) => {
+  if (!req.files || !req.files.file) {
     return res.status(400).send("No file uploaded.");
   }
 
-  // The URL should reflect the actual path where the file can be accessed
-  const fileUrl = `https://lagueslo.com/uniboAssignment/json/${req.file.filename}`;
+  const folderName = req.body.folderName;
+  const baseUploadDir =
+    "/home/admin/web/lagueslo.com/public_html/uniboAssignment/json";
+  const baseUrl = "https://lagueslo.com/uniboAssignment/json";
 
-  // Extract the title and date from the file name or request body
-  // Assuming the date is included in the file as a JSON object
-  const title = req.file.originalname.replace(".json", ""); // Remove the .json extension to get the title
-  const date = JSON.parse(fs.readFileSync(req.file.path)).dateToday;
+  let uploadDir = baseUploadDir;
+  let fileUrlBase = baseUrl;
 
-  // Prepare SQL statement to insert form details into the database
-  const sql = "INSERT INTO uniboForm (json_url, title, date) VALUES (?, ?, ?)";
+  // Only modify the path and URL if folderName is provided and the folder exists
+  if (folderName && fs.existsSync(path.join(baseUploadDir, folderName))) {
+    uploadDir = path.join(baseUploadDir, folderName);
+    fileUrlBase = `https://lagueslo.com/uniboAssignment/folder/${folderName}`;
+  }
 
-  // Execute the SQL statement
-  connection.execute(sql, [fileUrl, title, date], (err, results) => {
+  const uploadedFile = req.files.file;
+  const filePath = path.join(uploadDir, uploadedFile.name);
+
+  uploadedFile.mv(filePath, (err) => {
     if (err) {
-      console.error("Error inserting data into the database", err);
-      return res.status(500).send("Error inserting data into the database");
+      console.error("Error saving the file", err);
+      return res.status(500).send("Error uploading file");
     }
-    // If successful, send back the URL of the uploaded JSON file
-    res.json({ url: fileUrl });
+
+    const fileUrl = `${fileUrlBase}/${uploadedFile.name}`;
+
+    // Extract the title and date from the file content
+    const fileContent = JSON.parse(fs.readFileSync(filePath));
+    const title = fileContent.title || uploadedFile.name.replace(".json", "");
+    const date = fileContent.dateToday;
+
+    const sql =
+      "INSERT INTO uniboForm (json_url, title, date) VALUES (?, ?, ?)";
+    connection.execute(sql, [fileUrl, title, date], (err, results) => {
+      if (err) {
+        console.error("Error inserting data into the database", err);
+        return res.status(500).send("Error inserting data into the database");
+      }
+      res.json({
+        success: true,
+        url: fileUrl,
+        message: "File uploaded successfully",
+      });
+    });
   });
 });
 
-// Get the list of JSON files
+// Get the list of JSON files and folders
 app.get("/list-json", async (req, res) => {
   const uploadPath =
     "/home/admin/web/lagueslo.com/public_html/uniboAssignment/json";
 
-  fs.readdir(uploadPath, (err, files) => {
+  fs.readdir(uploadPath, (err, items) => {
     if (err) {
       console.error("Error reading the directory", err);
       return res.status(500).send("Error reading the directory");
     }
 
-    const jsonFiles = files
-      .filter((file) => path.extname(file).toLowerCase() === ".json")
-      .map((file) => {
-        const filePath = path.join(uploadPath, file);
-        const fileStats = fs.statSync(filePath);
+    const allItems = items.map((item) => {
+      const itemPath = path.join(uploadPath, item);
+      const isDirectory = fs.statSync(itemPath).isDirectory();
 
-        // Read the JSON file to extract the author information
-        const fileContent = JSON.parse(fs.readFileSync(filePath));
+      if (isDirectory) {
+        // Handle directories (folders)
+        return {
+          name: item,
+          isDirectory: true,
+          lastModified: fs.statSync(itemPath).mtime,
+        };
+      } else if (path.extname(item).toLowerCase() === ".json") {
+        // Handle JSON files
+        const fileStats = fs.statSync(itemPath);
+        const fileContent = JSON.parse(fs.readFileSync(itemPath));
         const author = fileContent.author; // Assuming 'author' is a key in your JSON structure
 
         return {
-          name: file,
-          author: author, // Include the author information
-          url: `https://lagueslo.com/uniboAssignment/json/${file}`,
+          name: item,
+          isDirectory: false,
+          author: author,
+          url: `https://lagueslo.com/uniboAssignment/json/${item}`,
           lastModified: fileStats.mtime,
         };
-      });
+      }
+    });
 
-    res.json(jsonFiles);
+    // Filter out undefined items (in case there are files that are not JSON)
+    const filteredItems = allItems.filter((item) => item !== undefined);
+
+    res.json(filteredItems);
   });
 });
 
@@ -236,6 +259,27 @@ app.delete("/delete/:fileName", async (req, res) => {
   } catch (error) {
     console.error("Error deleting file:", error);
     res.status(500).send("Error deleting file");
+  }
+});
+
+app.post("/create-folder", async (req, res) => {
+  const { folderName } = req.body;
+  const folderPath = `/home/admin/web/lagueslo.com/public_html/uniboAssignment/json/${folderName}`;
+
+  if (!folderName) {
+    return res.status(400).send("Folder name is required");
+  }
+
+  try {
+    if (!fs.existsSync(folderPath)) {
+      fs.mkdirSync(folderPath, { recursive: true });
+      res.status(200).send({ message: "Folder created successfully" });
+    } else {
+      res.status(409).send({ message: "Folder already exists" });
+    }
+  } catch (error) {
+    console.error("Error creating folder:", error);
+    res.status(500).send("Error creating folder");
   }
 });
 

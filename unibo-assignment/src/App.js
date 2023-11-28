@@ -17,6 +17,7 @@ import CallUs from "./components/CallUs";
 import FormComponent from "./components/FormComponent";
 import FormList from "./components/FormList";
 import { ToastContainer } from "react-toastify";
+import FolderComponent from "./components/FolderComponent";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route path="/contact/phone" element={<CallUs />} />
           <Route path="/form" element={<FormComponent />} />
           <Route path="/formList" element={<FormList />} />
+          <Route path="/folder/:folderName" element={<FolderComponent />} />
         </Routes>
       </div>
     </Router>
