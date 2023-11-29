@@ -107,8 +107,10 @@ app.post("/upload", (req, res) => {
 
 // Get the list of JSON files and folders
 app.get("/list-json", async (req, res) => {
-  const uploadPath =
-    "/home/admin/web/lagueslo.com/public_html/uniboAssignment/json";
+  const folderName = req.query.folder;
+  const uploadPath = folderName
+    ? `/home/admin/web/lagueslo.com/public_html/uniboAssignment/json/${folderName}`
+    : "/home/admin/web/lagueslo.com/public_html/uniboAssignment/json";
 
   fs.readdir(uploadPath, (err, items) => {
     if (err) {

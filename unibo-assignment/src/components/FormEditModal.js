@@ -8,7 +8,13 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { saveAs } from "file-saver";
 
-const FormEditModal = ({ show, handleClose, fileName, updateFileList }) => {
+const FormEditModal = ({
+  show,
+  handleClose,
+  fileName,
+  folderName,
+  updateFileList,
+}) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
@@ -17,9 +23,27 @@ const FormEditModal = ({ show, handleClose, fileName, updateFileList }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          `https://lagueslo.com/uniboAssignment/json/${fileName}`
-        );
+        if (!fileName) {
+          console.error("No file name provided");
+          return;
+        }
+
+        // Debug: Log the folderName and fileName
+        console.log("Folder:", folderName, "File:", fileName);
+
+        let url;
+        if (folderName) {
+          // Construct the URL to include the folder name
+          url = `https://lagueslo.com/uniboAssignment/json/${folderName}/${fileName}`;
+        } else {
+          // URL when no folder name is provided
+          url = `https://lagueslo.com/uniboAssignment/json/${fileName}`;
+        }
+
+        // Debug: Log the constructed URL
+        console.log("Fetching from URL:", url);
+
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -36,7 +60,7 @@ const FormEditModal = ({ show, handleClose, fileName, updateFileList }) => {
     if (fileName) {
       fetchData();
     }
-  }, [fileName]);
+  }, [fileName, folderName]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
